@@ -1,0 +1,122 @@
+nav.top-navbar {
+  background-color: var(--white-color);
+  padding: 24px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+nav.top-navbar .top-navbar__inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .navbar_sections ul {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar_user_options ul {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+nav form > div {
+  display: flex;
+  gap: 12px;
+  background-color: var(--gray-color);
+  padding: 12px 16px;
+  border-radius: 62px;
+  width: 570px;
+}
+
+nav form input {
+  width: 100%;
+  border: 0;
+  background-color: var(--gray-color);
+  outline: none;
+  font-size: 16px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+}
+
+nav form button {
+  border: 0;
+  outline: 0;
+}
+
+nav form button:hover {
+  cursor: pointer;
+}
+
+li.nav_dropdown {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  position: relative;
+}
+
+li.nav_dropdown:hover {
+  cursor: pointer;
+}
+
+.nav_dropdown .dropdown-main {
+  display: none;
+  position: absolute;
+  background-color: var(--white-color);
+  top: 20px;
+  left: -25px;
+  padding: 10px;
+}
+
+.nav_dropdown .dropdown-main ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.nav_dropdown .dropdown-main a {
+  display: block;
+  width: 120px;
+  padding: 15px 5px;
+}
+
+.nav_dropdown .dropdown-main a:hover {
+  background-color: var(--gray-darker);
+  color: var(--white-color);
+}
+
+@media only screen and (max-width: 1150px) {
+  nav form > div {
+    width: 300px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  nav form > div {
+    width: 150px;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  h1.company_name {
+    font-size: 24px !important;
+  }
+
+  .navbar_search {
+    display: none;
+  }
+
+  main.main_content {
+    background-position-x: center !important;
+    background-size: 500px !important;
+  }
+}
+
+h1.company_name {
+  font-size: 32px;
+}

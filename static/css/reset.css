@@ -1,0 +1,41 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat";
+}
+
+h1 {
+  font-weight: 900;
+}
+
+a {
+  text-decoration: none;
+  color: var(--header-color);
+}
+
+a,
+p {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+}
+
+p {
+  color: var(--paragraph-color);
+}
+
+ul,
+ol {
+  list-style-type: none;
+}
+
+:root {
+  --header-color: #000;
+  --paragraph-color: rgba(0, 0, 0, 0.6);
+  --white-color: #fff;
+  --gray-color: #f0f0f0;
+  --gray-dark: #bebebe;
+  --gray-darker: #919191;
+}

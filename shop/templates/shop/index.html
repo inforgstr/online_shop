@@ -98,4 +98,17 @@ Shop Co
     </div>
   </div>
 </section>
+
+<section class="style-section">
+  <div class="section-header">
+    <h1>BROWSE BY DRESS STYLE</h1>
+  </div>
+  <div class="section-body">
+    {% for style in styles %}
+    <a href="#" class="card-item casual" style="background-image: url({{style.img.url}});">
+      <h3>{{ style.name|title }}</h3>
+    </a>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}

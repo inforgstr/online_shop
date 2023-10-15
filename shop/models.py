@@ -123,6 +123,7 @@ class ProductType(models.Model):
 
 
 class ProductStyle(models.Model):
+    img = models.ImageField(upload_to="product_brands/")
     name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
@@ -170,8 +171,6 @@ class Product(models.Model):
     published = models.DateTimeField(default=timezone.now)
     description = models.TextField()
 
-    objects = models.Manager()
-
     class Meta:
         ordering = ["-timestamp"]
         indexes = [
@@ -182,6 +181,18 @@ class Product(models.Model):
         value = self.title
         self.slug = slugify(value, allow_unicode=True)
         super().save(*args, **kwargs)
+
+    def add_wishlist(self, user):
+        user_wishlist = UserWishlist.objects.filter(user=user, product=self)
+        if user_wishlist:
+            return False
+        UserWishlist.objects.create(user=user, product=self)
+
+    def remove_wishlist(self, user):
+        user_wishlist = UserWishlist.objects.filter(user=user, product=self)
+        if not user_wishlist:
+            return False
+        user_wishlist.delete()
 
     # def get_absolute_url(self):
     #     kwargs = {
@@ -205,7 +216,7 @@ class Product(models.Model):
         self.quantity -= amount
         super().save()
 
-    def check_availablity(self, quantity):
+    def check_availablity(self):
         """
         Checks for product quantity.
         If product does not exist it will save as is_available = False

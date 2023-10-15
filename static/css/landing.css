@@ -115,7 +115,10 @@ section.top-selling {
   margin: 0 auto;
   max-width: 1380px;
   padding: 72px 15px 64px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+section.new-arrivals {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .section-header h1 {
@@ -175,7 +178,7 @@ span#price-discount {
   padding: 6px 14px;
 }
 
-span#rating {
+p#rating {
   font-size: 14px;
 }
 
@@ -199,4 +202,63 @@ a#view-all {
 
 a#view-all:hover {
   background-color: var(--gray-color);
+}
+
+section.style-section {
+  border-radius: 40px;
+  background-color: var(--gray-color);
+  padding: 70px 64px 76px;
+  max-width: 1380px;
+  margin: 0 auto;
+  margin-bottom: 80px;
+}
+
+section.style-section .section-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-basis: 100;
+  flex-basis: 100;
+  flex-grow: 1;
+}
+
+.style-section .card-item {
+  padding: 36px;
+  border-radius: 40px;
+  height: 300px;
+  overflow: hidden;
+  flex-basis: 400px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 700px;
+  background-color: var(--white-color);
+  transition: all 0.5s ease-in;
+  opacity: 0.5;
+}
+
+.style-section .card-item > h3 {
+  font-size: 40px;
+  font-weight: normal;
+}
+
+section.style-section .card-item:nth-child(2),
+section.style-section .card-item:nth-child(3) {
+  background-position: 30px -200px;
+  background-size: 1000px;
+  flex-basis: 700px;
+}
+
+section.style-section .card-item:first-child {
+  background-position: 130px;
+}
+
+section.style-section .card-item:nth-child(4) {
+  background-size: 400px;
+  background-position: 100px;
+}
+
+section.style-section .card-item:hover {
+  opacity: 1;
 }

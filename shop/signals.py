@@ -3,7 +3,7 @@ import os
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save
 
-from shop.models import Review, ShopBrand, Product, Order
+from shop.models import Review, ShopBrand, Product, Order, ProductStyle
 
 
 @receiver(post_save, sender=Order)
@@ -50,6 +50,12 @@ def brand_auto_delete_file_on_delete(sender, instance, **kwargs):
         os.remove(instance.img.path)
 
 
+@receiver(post_delete, sender=ProductStyle)
+def product_brand_auto_delete(sender, instance, **kwargs):
+    if instance.img and os.path.isfile(instance.img.path):
+        os.remove(instance.img.path)
+
+
 @receiver(post_delete, sender=Product)
 def product_auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.img1 and os.path.isfile(instance.img1.path):
@@ -61,7 +67,7 @@ def product_auto_delete_file_on_delete(sender, instance, **kwargs):
 
 
 @receiver(pre_save, sender=ShopBrand)
-def listing_auto_delete_file_on_change(sender, instance, **kwargs):
+def brand_auto_delete_file_on_change(sender, instance, **kwargs):
     if not instance.pk:
         return False
 
@@ -75,8 +81,23 @@ def listing_auto_delete_file_on_change(sender, instance, **kwargs):
         os.remove(old_file.path)
 
 
+@receiver(pre_save, sender=ProductStyle)
+def product_brand_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = ProductStyle.objects.get(pk=instance.pk).img
+    except ProductStyle.DoesNotExist:
+        return False
+
+    new_file = instance.img
+    if old_file != new_file and os.path.isfile(old_file.path):
+        os.remove(old_file.path)
+
+
 @receiver(pre_save, sender=Product)
-def user_auto_delete_file_on_change(sender, instance, **kwargs):
+def product_auto_delete_file_on_change(sender, instance, **kwargs):
     if not instance.pk:
         return False
 

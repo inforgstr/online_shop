@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 
-from shop.models import Product, ShopBrand, Shop
+from shop.models import Product, ShopBrand, Shop, ProductStyle
 
 
 def home(request):
@@ -18,11 +18,13 @@ def home(request):
         .order_by("-orders_count")
         .filter(orders_count__gte=1)
     )[:4]
+    styles = ProductStyle.objects.all()
 
     context = {
         "arrivals": arrivals,
         "brands": brands,
         "shop": shop,
         "popular_products": popular_products,
+        "styles": styles,
     }
     return render(request, "shop/index.html", context)

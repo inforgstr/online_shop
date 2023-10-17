@@ -64,6 +64,9 @@ class UserWishlist(models.Model):
     def __str__(self) -> str:
         return "%s - %s" % (self.user.email, self.product.title)
 
+    def get_price(self):
+        return self.product.get_discounted_price()
+
 
 class ShopBrand(models.Model):
     """
@@ -126,8 +129,27 @@ class ProductStyle(models.Model):
     img = models.ImageField(upload_to="product_brands/")
     name = models.CharField(max_length=100)
 
+    # def get_absolute_url(self):
+    #     pass
+
     def __str__(self) -> str:
         return self.name
+
+
+class PopularProductManager(models.Manager):
+    def get_queryset(self):
+        popular_products = (
+            Product.objects.annotate(
+                orders_count=models.Count("product_orders"),
+                reviews_count=models.Count("product_reviews"),
+            )
+            .order_by("-timestamp")
+            .order_by("-reviews_count")
+            .order_by("-stars")
+            .order_by("-orders_count")
+            .filter(orders_count__gte=1)
+        )
+        return popular_products
 
 
 class Product(models.Model):
@@ -170,6 +192,9 @@ class Product(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(default=timezone.now)
     description = models.TextField()
+
+    objects = models.Manager()
+    populars = PopularProductManager()
 
     class Meta:
         ordering = ["-timestamp"]
@@ -229,7 +254,7 @@ class Product(models.Model):
         if self.discount:
             discount = 100 - self.discount
             return round(discount / 100 * float(self.price), 2)
-        return False
+        return self.price
 
     def __str__(self) -> str:
         return "%s" % (self.title)

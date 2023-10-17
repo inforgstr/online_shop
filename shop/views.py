@@ -1,24 +1,16 @@
 from django.shortcuts import render
 from django.db.models import Count
 
-from shop.models import Product, ShopBrand, Shop, ProductStyle
+from shop.models import Product, ShopBrand, Shop, ProductStyle, Review
 
 
 def home(request):
     arrivals = Product.objects.all()[:4]
     brands = ShopBrand.objects.all()
     shop = Shop.objects.last()
-    popular_products = (
-        Product.objects.annotate(
-            orders_count=Count("product_orders"), reviews_count=Count("product_reviews")
-        )
-        .order_by("-timestamp")
-        .order_by("-reviews_count")
-        .order_by("-stars")
-        .order_by("-orders_count")
-        .filter(orders_count__gte=1)
-    )[:4]
+    popular_products = Product.populars.all()[:4]
     styles = ProductStyle.objects.all()
+    happy_reviews = Review.objects.filter(stars__gte=4)
 
     context = {
         "arrivals": arrivals,
@@ -26,5 +18,6 @@ def home(request):
         "shop": shop,
         "popular_products": popular_products,
         "styles": styles,
+        "reviews": happy_reviews,
     }
     return render(request, "shop/index.html", context)

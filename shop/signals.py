@@ -2,6 +2,7 @@ import os
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save
+from better_profanity import profanity
 
 from shop.models import Review, ShopBrand, Product, Order, ProductStyle
 
@@ -18,6 +19,12 @@ def set_product_availability(sender, instance: Order, created, **kwargs):
 @receiver(post_save, sender=Review)
 def set_product_stars(sender, instance: Review, created, **kwargs):
     if created:
+        body = profanity.censor(instance.body)
+        print(body)
+        if instance.body != body:
+            instance.body = body
+            instance.save()
+
         product_reviews = instance.product.product_reviews.all()
         product = instance.product
         if product_reviews:
@@ -38,10 +45,12 @@ def pop_product_stars(sender, instance: Review, *args, **kwrags):
             sum(x.stars for x in product_reviews) / len(product_reviews),
             1,
         )
-        print(avg_stars)
         if avg_stars != product.stars:
             product.stars = avg_stars
             product.save()
+    else:
+        product.stars = None
+        product.save()
 
 
 @receiver(post_delete, sender=ShopBrand)

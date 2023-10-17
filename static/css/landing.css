@@ -262,3 +262,18 @@ section.style-section .card-item:nth-child(4) {
 section.style-section .card-item:hover {
   opacity: 1;
 }
+
+section.customer-reviews {
+  max-width: 1380px;
+  margin: 0 auto;
+  margin-bottom: 80px;
+  padding: 0 15px;
+}
+
+.customer-reviews .reviews-header h1 {
+  font-size: 48px;
+}
+
+.customer-reviews .reviews-header {
+  margin-bottom: 40px;
+}

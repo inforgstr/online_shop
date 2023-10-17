@@ -111,4 +111,40 @@ Shop Co
     {% endfor %}
   </div>
 </section>
+
+<section class="customer-reviews">
+  <div class="reviews-header">
+    <h1>OUR HAPPY CUSTOMERS</h1>
+  </div>
+  <div class="reviews-body">
+    {% for review in reviews %}
+    <div class="card-item">
+      {% for star in review.product.get_stars %}
+        {% if star == "/" %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="9" height="17" viewBox="0 0 9 17" fill="none">
+        <path d="M3.56595 16.9793L8.99999 13.956V0.255005L6.38079 5.89491L0.207535 6.6431L4.76203 10.8769L3.56595 16.9793Z" fill="#FFC633"/>
+        </svg>
+        {% else %}
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="19"
+        height="17"
+        viewBox="0 0 19 17"
+        fill="none"
+        >
+        <path
+            d="M9.24494 0.255005L11.8641 5.89491L18.0374 6.6431L13.4829 10.8769L14.679 16.9793L9.24494 13.956L3.8109 16.9793L5.00697 10.8769L0.452479 6.6431L6.62573 5.89491L9.24494 0.255005Z"
+            fill="#FFC633"
+        />
+        </svg>
+        {% endif %}
+      {% endfor %}
+      <p>
+        <h3>{{ review.user.first_name }} {{ review.user.last_name|make_list|slice:":1"|join:"" }}.</h3>
+      </p>
+      {{ review.body }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}

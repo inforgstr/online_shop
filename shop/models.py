@@ -1,65 +1,43 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-)
+from django.core.validators import MaxValueValidator
+from ckeditor.fields import RichTextField
+
+from django.conf import settings
 from django.utils import timezone
-from django.utils.text import slugify
 from django.urls import reverse
 
-
-class UserProfileManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("The Email field must be set")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self.db)
-        return user
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
-        return self.create_user(email, password, **extra_fields)
+from shop.utils import rand_slug
 
 
-class UserProfile(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
-
-    objects = UserProfileManager()
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+class Profile(models.Model):
+    image = models.ImageField(upload_to="profiles/img/%Y/%m/%d/", blank=True, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=13, blank=True)
 
     def __str__(self) -> str:
-        return self.email
+        return f"{self.user.username} - {self.phone_number}"
+
+    def get_total_price(self):
+        return sum(
+            int(query.quantity) * float(query.product.get_discounted_price())
+            for query in self.user.user_carts.all()
+        )
 
 
-class UserWishlist(models.Model):
+class CartItem(models.Model):
     user = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, related_name="user_wishlist"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_carts"
     )
     product = models.ForeignKey(
-        "shop.Product", on_delete=models.CASCADE, related_name="product_wishlist"
+        "shop.Product",
+        on_delete=models.CASCADE,
+        related_name="product_carts",
+        blank=True,
     )
-    quantity = models.IntegerField(default=1, validators=[MinValueValidator(1)])
-
-    class Meta:
-        unique_together = ("user", "product")
+    quantity = models.PositiveIntegerField(default=1)
+    size = models.ForeignKey(
+        "shop.Size", on_delete=models.CASCADE, related_name="size_carts", blank=True
+    )
 
     def __str__(self) -> str:
         return "%s - %s" % (self.user.email, self.product.title)
@@ -90,6 +68,7 @@ class Shop(models.Model):
     brands = models.IntegerField("International Brands")
     quality = models.IntegerField("High-Quality Products")
     customers = models.IntegerField("Happy customers")
+    about = RichTextField("About page content")
 
     # social media links
     twitter = models.URLField()
@@ -128,9 +107,6 @@ class ProductType(models.Model):
 class ProductStyle(models.Model):
     img = models.ImageField(upload_to="product_brands/")
     name = models.CharField(max_length=100)
-
-    # def get_absolute_url(self):
-    #     pass
 
     def __str__(self) -> str:
         return self.name
@@ -188,10 +164,12 @@ class Product(models.Model):
     )
 
     is_available = models.BooleanField(default=True)
-    size = models.ManyToManyField("shop.Size", related_name="size_products", blank=True)
+    sizes = models.ManyToManyField(
+        "shop.Size", related_name="size_products", blank=True
+    )
     timestamp = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(default=timezone.now)
-    description = models.TextField()
+    description = RichTextField()
 
     objects = models.Manager()
     populars = PopularProductManager()
@@ -202,35 +180,72 @@ class Product(models.Model):
             models.Index(fields=["-timestamp"]),
         ]
 
+    @property
+    def image1_url(self):
+        if self.img1 and hasattr(self.img1, "url"):
+            return self.img1.url
+
+    @property
+    def image2_url(self):
+        if self.img2 and hasattr(self.img2, "url"):
+            return self.img2.url
+
+    @property
+    def image3_url(self):
+        if self.img3 and hasattr(self.img3, "url"):
+            return self.img3.url
+
     def save(self, *args, **kwargs):
-        value = self.title
-        self.slug = slugify(value, allow_unicode=True)
+        if not self.slug:
+            self.slug = rand_slug(self.title)
         super().save(*args, **kwargs)
 
-    def add_wishlist(self, user):
-        user_wishlist = UserWishlist.objects.filter(user=user, product=self)
-        if user_wishlist:
+    def _check_cart(self, user, size_obj):
+        try:
+            user_cart = CartItem.objects.get(product=self, user=user, size=size_obj)
+            return user_cart
+        except CartItem.DoesNotExist:
             return False
-        UserWishlist.objects.create(user=user, product=self)
 
-    def remove_wishlist(self, user):
-        user_wishlist = UserWishlist.objects.filter(user=user, product=self)
-        if not user_wishlist:
+    def add_cart(self, user, size, quantity):
+        try:
+            size = Size.objects.get(name=size)
+        except Size.DoesNotExist:
             return False
-        user_wishlist.delete()
 
-    # def get_absolute_url(self):
-    #     kwargs = {
-    #         "pk": self.pk,
-    #         "slug": self.slug,
-    #     }
-    #     return reverse("shop:product-detail", kwargs=kwargs)
+        user_cart = self._check_cart(user, size)
+        if user_cart and (
+            (int(user_cart.quantity) < int(self.quantity) and int(quantity) > 0)
+            or (
+                int(user_cart.quantity) <= int(self.quantity)
+                and int(quantity) < 0
+                and int(user_cart.quantity) > 1
+            )
+        ):
+            user_cart.quantity += int(quantity)
+            user_cart.save()
+            return True
+        elif not user_cart:
+            CartItem.objects.create(
+                user=user, product=self, quantity=quantity, size=size
+            )
+            return True
+        return False
 
-    def get_stars(self):
-        rate = self.stars - int(self.stars)
-        if rate > 0:
-            return [x for x in range(int(self.stars))] + ["/"]
-        return range(int(self.stars))
+    def remove_cart(self, user, size):
+        try:
+            size = Size.objects.get(name=size)
+        except Size.DoesNotExist:
+            return False
+
+        user_cart = self._check_cart(user, size)
+        if user_cart:
+            user_cart.delete()
+            return True
+        return False
+
+    def get_absolute_url(self):
+        return reverse("shop:product_detail", args=[self.slug])
 
     def refresh_quantity(self, amount):
         """
@@ -240,15 +255,6 @@ class Product(models.Model):
             return False
         self.quantity -= amount
         super().save()
-
-    def check_availablity(self):
-        """
-        Checks for product quantity.
-        If product does not exist it will save as is_available = False
-        """
-        if self.quantity == 0:
-            self.is_available = False
-            super().save()
 
     def get_discounted_price(self):
         if self.discount:
@@ -266,7 +272,7 @@ class Review(models.Model):
     )
     stars = models.DecimalField(max_digits=2, decimal_places=1)
     user = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, related_name="user_reviews"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_reviews"
     )
     body = models.TextField()
     posted_date = models.DateTimeField(auto_now_add=True)
@@ -281,14 +287,43 @@ class Review(models.Model):
 
 
 class Order(models.Model):
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="product_orders"
-    )
     user = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, related_name="user_orders"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_orders"
     )
-    quantity = models.IntegerField()
-    order_date = models.DateTimeField(auto_now_add=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField()
+    address = models.CharField(max_length=250)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=100)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    paid = models.BooleanField(default=False)
 
-    def __str__(self) -> str:
-        return "%s - %s" % (self.user.email, self.product.title)
+    class Meta:
+        ordering = ["-created"]
+        indexes = [
+            models.Index(fields=["-created"]),
+        ]
+
+    def __str__(self):
+        return f"Order {self.first_name}"
+
+    def get_total_cost(self):
+        return sum(item.get_cost() for item in self.items.all())
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, related_name="product_orders", on_delete=models.CASCADE
+    )
+    size = models.ForeignKey(Size, related_name="size_orders", on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=20, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.order.first_name} - {self.quantity}"
+
+    def get_cost(self):
+        return self.price * self.quantity

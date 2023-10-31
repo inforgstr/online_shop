@@ -1,0 +1,45 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static './css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="block">
+    <div class="profile-header">
+        <h1>GET CHECKOUT</h1>
+    </div>
+    <div class="block__inner">
+        <section class="profile-form">
+            <div class="profile-header">
+                <h1>CREATE CHECKOUT</span></h1>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save Checkout">
+            </form>
+        </section>
+        <section class="profile-links">
+            <div class="profile-header">
+                <h1>YOUR CART PRODUCTS</h1>
+            </div>
+            <ul>
+                {% for item in cart %}
+                <li style="margin: 10px 20px;">
+                    <span style="font-weight: 600;">{{ item.quantity }}x</span>
+                    -
+                    {{ item.product.title }}
+                    -
+                    <span>${{ item.price|make_int }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</div>
+{% endblock %}

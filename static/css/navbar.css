@@ -1,7 +1,6 @@
 nav.top-navbar {
   background-color: var(--white-color);
-  padding: 24px 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  padding: 24px 10px 0;
 }
 
 nav.top-navbar .top-navbar__inner {
@@ -10,6 +9,8 @@ nav.top-navbar .top-navbar__inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 nav .navbar_sections ul {
@@ -21,7 +22,19 @@ nav .navbar_sections ul {
 .navbar_user_options ul {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.navbar_user_options ul li#user a {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.navbar_user_options ul > li:first-child {
+  padding-right: 10px;
 }
 
 nav form > div {
@@ -50,44 +63,6 @@ nav form button {
 
 nav form button:hover {
   cursor: pointer;
-}
-
-li.nav_dropdown {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  position: relative;
-}
-
-li.nav_dropdown:hover {
-  cursor: pointer;
-}
-
-.nav_dropdown .dropdown-main {
-  display: none;
-  position: absolute;
-  background-color: var(--white-color);
-  top: 20px;
-  left: -25px;
-  padding: 10px;
-}
-
-.nav_dropdown .dropdown-main ul {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 999;
-}
-
-.nav_dropdown .dropdown-main a {
-  display: block;
-  width: 120px;
-  padding: 15px 5px;
-}
-
-.nav_dropdown .dropdown-main a:hover {
-  background-color: var(--gray-darker);
-  color: var(--white-color);
 }
 
 @media only screen and (max-width: 1150px) {
@@ -119,4 +94,53 @@ li.nav_dropdown:hover {
 
 h1.company_name {
   font-size: 32px;
+}
+
+a#user-cart {
+  position: relative;
+}
+
+a#user-cart > span {
+  position: absolute;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  clip-path: circle();
+  background-color: var(--header-color);
+  color: var(--white-color);
+  bottom: -17px;
+  right: -17px;
+}
+
+.sign-up-btn a {
+  display: block;
+  padding: 14px 20px;
+  font-size: 14px;
+  margin-left: 20px;
+  border-radius: 7px;
+  background-color: var(--header-color);
+  color: var(--white-color);
+  border: 1px solid var(--gray-darker);
+  transition: background-color 0.5s ease-in, color 0.4s ease;
+}
+
+.sign-up-btn a:hover {
+  background-color: var(--white-color);
+  color: var(--header-color);
+}
+
+li#user .avatar {
+  overflow: hidden;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--header-color);
+}
+
+li#user span#username {
+  font-weight: 600;
+  color: var(--header-color);
 }

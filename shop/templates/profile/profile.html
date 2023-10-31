@@ -1,0 +1,68 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static './css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="block">
+    <div class="profile-header">
+        <h1>PROFILE SETTINGS</h1>
+    </div>
+    <div class="block__inner">
+        <section class="profile-form">
+            <div class="profile-header">
+                <h1>PROFILE for <span>{{ user.username }}</span></h1>
+            </div>
+            <div class="profile-img">
+                {% if user.profile.image %}
+                <img src="{{ user.profile.image.url }}" {% if user.profile.image.width > user.profile.image.height %}style="height: 100%"{% else %}style="width:100%"{% endif %} alt="{{ user.username }}">
+                {% else %}
+                <img src="{% static './img/no-image.jpg' %}" width="100%" alt="no image picture">
+                {% endif %}
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>
+                    {{ profile_form.image }}
+                </p>
+                <p>
+                    {{ user_form.first_name.label_tag }}
+                    {{ user_form.first_name }}
+                </p>
+                <p>
+                    {{ user_form.last_name.label_tag }}
+                    {{ user_form.last_name }}
+                </p>
+                <p>
+                    {{ user_form.username.label_tag }}
+                    {{ user_form.username }}
+                </p>
+                <p>
+                    {{ user_form.email.label_tag }}
+                    {{ user_form.email }}
+                </p>
+                <p>
+                    {{ profile_form.phone_number.label_tag }}
+                    {{ profile_form.phone_number }}
+                </p>
+                <input type="submit" value="Save Profile">
+            </form>
+        </section>
+        <section class="profile-links">
+            <div class="link-item">
+                <a href="{% url 'auth:user_change_password' %}">Change Password</a>
+            </div>
+            <div class="link-item">
+                <a href="{% url 'auth:order_list' %}">Orders</a>
+            </div>
+            <div class="link-item">
+                <a href="{% url 'auth:logout' %}">Logout</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

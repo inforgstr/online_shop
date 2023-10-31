@@ -1,8 +1,6 @@
 import environ
 import os
 
-from pathlib import Path
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, "subdir").
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,16 +24,22 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # local packages
+    "cart.apps.CartConfig",
+    "shop.apps.ShopConfig",
+    "payments.apps.PaymentsConfig",
+
+    # built-in packages
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
-    # local
-    "shop.apps.ShopConfig",
-    "payments.apps.PaymentsConfig",
+    # third part packages
+    "ckeditor",
 ]
 
 MIDDLEWARE = [
@@ -61,9 +65,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "shop.context_processors.shop",
+                "shop.context_processors.shop_form",
+                "cart.context_processors.cart",
             ],
         },
     },
+]
+
+# Authentication backends with custom backend called EmailAuthBackend
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "auth.authentication.EmailAuthBackend",
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
@@ -107,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Samarkand'
 
 USE_I18N = True
 
@@ -134,4 +147,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "shop.UserProfile"
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("email")
+EMAIL_HOST_PASSWORD = os.environ.get("email_password")
+EMAIL_USE_TLS = True
+
+STRIPE_SECRET_KEY = "sk_test_51O4Sg5CKkMgPTgjF873npoysptsBe6XjMKfMPLnWxtOEeuOQWlgvl6ICmEXRRM5Ryq935o8MyuB0VXG0i0OOUSDm00JRufk6Cd"
+STRIPE_PUBLIC_KEY = "pk_test_51O4Sg5CKkMgPTgjFYEPduL4au2zwLEfIBk9OvOzjCz5BkEZ3PCSDmSVkzfszbMuLihPoHqiqoiOP5AV91ljwhmXY00KBUmRFak"
+STRIPE_API_VERSION = "2023-10-16"
+
+CART_SESSION_ID = "cart"
+
+LOGIN_URL = "auth:login"
+
+STRIPE_WEBHOOK_SECRET = "whsec_4b4397bbea52daa6b297bb98bde154db210e6b95d3f716bfb04f21e5944a5350"

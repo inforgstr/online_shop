@@ -1,0 +1,55 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static './css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="block">
+    <div class="section-header">
+        <h1>Sign Up</h1>
+    </div>
+    <div class="block-body">
+        <form action="{% url 'auth:signup' %}" method="POST">
+            {% csrf_token %}
+            <p id="ms-m">
+                Already a member? <a href="{% url 'auth:login' %}">Log in</a>
+            </p>
+            <p>
+                {{ form.first_name }}
+                <p>{{ form.first_name.errors }}</p>
+            </p>
+            <p>
+                {{ profile_form.phone_number }}
+                <p>{{ profile_form.phone_number.errors }}</p>
+            </p>
+            <p>
+                {{ form.last_name }}
+                <p>{{ form.last_name.errors }}</p>
+            </p>
+            <p>
+                {{ form.username }}
+                <p>{{ form.username.errors }}</p>
+            </p>
+            <p>
+                {{ form.email }}
+                <p>{{ form.email.errors }}</p>
+            </p>
+            <p>
+                {{ form.password }}
+                <p>{{ form.password.errors }}</p>
+            </p>
+            <p>
+                {{ form.password2 }}
+                <p>{{ form.password2.errors }}</p>
+            </p>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}<script src="{% static './js/auth.js' %}"></script>{% endblock %}

@@ -3,24 +3,48 @@ import os
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save
 from better_profanity import profanity
+from django.contrib.auth.models import User
 
-from shop.models import Review, ShopBrand, Product, Order, ProductStyle
+from shop.models import Review, ShopBrand, Product, ProductStyle, Profile
 
 
-@receiver(post_save, sender=Order)
-def set_product_availability(sender, instance: Order, created, **kwargs):
+@receiver(post_save, sender=User)
+def create_new_user_on_save(sender, instance: User, created, **kwargs):
     if created:
-        obj = instance.product
-        if obj.quantity == 0:
-            obj.is_available = False
-            obj.save()
+        Profile.objects.create(user=instance)
+
+
+@receiver(pre_save, sender=Profile)
+def profile_auto_delete_file_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = Profile.objects.get(pk=instance.pk).image
+    except Profile.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if old_file and old_file != new_file and os.path.isfile(old_file.path):
+        os.remove(old_file.path)
+
+
+@receiver(post_delete, sender=Profile)
+def profile_auto_delete_file_on_delete(sender, instance, **kwargs):
+    if instance.image and os.path.isfile(instance.image.path):
+        os.remove(instance.image.path)
+
+
+@receiver(post_delete, sender=User)
+def delete_user_on_delete(sender, instance, *args, **kwargs):
+    user = Profile.objects.filter(user=instance)
+    user.delete()
 
 
 @receiver(post_save, sender=Review)
 def set_product_stars(sender, instance: Review, created, **kwargs):
     if created:
         body = profanity.censor(instance.body)
-        print(body)
         if instance.body != body:
             instance.body = body
             instance.save()
@@ -69,10 +93,11 @@ def product_brand_auto_delete(sender, instance, **kwargs):
 def product_auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.img1 and os.path.isfile(instance.img1.path):
         os.remove(instance.img1.path)
-    if instance.img2 and os.path.isfile(instance.img2.path):
-        os.remove(instance.img2.path)
-    if instance.img3 and os.path.isfile(instance.img3.path):
-        os.remove(instance.img3.path)
+    if instance.img2 and instance.img3:
+        if os.path.isfile(instance.img2.path):
+            os.remove(instance.img2.path)
+        if os.path.isfile(instance.img3.path):
+            os.remove(instance.img3.path)
 
 
 @receiver(pre_save, sender=ShopBrand)
@@ -105,10 +130,25 @@ def product_brand_on_change(sender, instance, **kwargs):
         os.remove(old_file.path)
 
 
+@receiver(post_save, sender=Product)
+def set_available_on_create(sender, instance, created, **kwargs):
+    if created:
+        if instance.quantity == 0:
+            instance.is_available = False
+        elif instance.quantity > 0:
+            instance.is_available = True
+        instance.save()
+
+
 @receiver(pre_save, sender=Product)
 def product_auto_delete_file_on_change(sender, instance, **kwargs):
     if not instance.pk:
         return False
+
+    if instance.quantity == 0:
+        instance.is_available = False
+    elif instance.quantity > 0:
+        instance.is_available = True
 
     try:
         old_file = Product.objects.get(pk=instance.pk)
@@ -124,8 +164,9 @@ def product_auto_delete_file_on_change(sender, instance, **kwargs):
     if old_file.img1 != new_file and os.path.isfile(old_file.img1.path):
         os.remove(old_file.img1.path)
 
-    if old_file2 != new_file2 and os.path.isfile(old_file2.path):
-        os.remove(old_file2.path)
+    if old_file2 and old_file3:
+        if old_file2 != new_file2 and os.path.isfile(old_file2.path):
+            os.remove(old_file2.path)
 
-    if old_file3 != new_file3 and os.path.isfile(old_file3.path):
-        os.remove(old_file3.path)
+        if old_file3 != new_file3 and os.path.isfile(old_file3.path):
+            os.remove(old_file3.path)

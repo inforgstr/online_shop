@@ -1,0 +1,103 @@
+.block {
+  margin: 50px auto 40px;
+}
+
+.block__inner {
+  display: flex;
+  gap: 20px;
+  justify-content: space-evenly;
+}
+
+section.profile-form {
+  padding: 20px 200px 100px;
+  border-radius: 12px;
+  background-color: var(--gray-color);
+  text-align: center;
+}
+
+section.profile-form .profile-header h1 {
+  font-weight: 500;
+  font-size: 28px;
+  text-align: center;
+  margin: 20px;
+}
+
+section.profile-form .profile-header h1 span {
+  font-weight: 700;
+}
+
+section.profile-form label {
+  padding-right: 10px;
+}
+
+section.profile-form form > p {
+  margin-bottom: 30px;
+}
+
+.profile-form .profile-img {
+  display: flex;
+  border: 2px solid var(--header-color);
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  border-radius: 50%;
+  margin-bottom: 50px;
+}
+
+section.profile-form input {
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: 0;
+  font-weight: 600;
+}
+
+section.profile-form input[type="submit"] {
+  padding: 20px 70px;
+  cursor: pointer;
+  background-color: rgb(213, 255, 213);
+  border: 1px solid var(--gray-dark);
+  font-size: 16px;
+  transition: background-color 0.3s ease-in, color 0.4s ease-out;
+}
+
+section.profile-form input[type="submit"]:hover {
+  color: var(--white-color);
+  background-color: var(--header-color);
+}
+
+section.profile-links {
+  background-color: var(--gray-color);
+  place-self: start;
+  padding: 20px 70px 0;
+}
+
+section.profile-links > .link-item a {
+  display: block;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 10px 50px;
+  text-align: center;
+  background-color: var(--white-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.block > .profile-header h1 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+section.profile-links > .link-item:last-child a {
+  margin-top: 70px;
+}
+
+section.profile-links > .link-item a:hover {
+  color: var(--white-color);
+  background-color: var(--header-color);
+}
+
+.profile-form form p > a {
+  display: none;
+}

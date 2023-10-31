@@ -1,0 +1,60 @@
+{% extends 'shop/base.html' %} 
+{% load static %}
+{% load shop_tags %}
+
+{% block title %}
+{{ user.username }}'s Orders
+{% endblock %} 
+
+{% block link %}
+<link rel="stylesheet" href="{% static './css/orders.css' %}" />
+{% endblock %} {% block content %}
+<div class="block">
+  <div class="section-header">
+    <h1>YOUR ORDERS</h1>
+  </div>
+  {% if orders %}
+  <form id="remove-all" action="{% url 'payments:payment_order_clear' %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Clear Orders">
+  </form>
+  {% endif %}
+  <div class="block-body">
+    {% for order in orders %}
+    {% for items in order.items.all %}
+    <div class="order-item">
+      <a href="{{ order.product.get_absolute_url }}" class="order-img">
+          <img src="{{ items.product.image1_url }}" alt="{{ order.product.title }}">
+      </a>
+      <div class="order-title">
+        <div class="order-title__inner">
+            {{ items.product.title }}
+        </div>
+        <div class="order-title-end">
+          Ordered at <span id="username">{{ order.created }}</span>
+        </div>
+      </div>
+      <div class="order-status">
+        Status: <span class="{% if order.paid %}paid{% else %}pend{% endif %}">{% if order.paid %}Paid{% else %}Pending Payment{% endif %}</span>
+      </div>
+      <div class="order-right-side">
+        <div class="order-right__inner">
+          Quantity: <span>{{ items.quantity }}</span>
+        </div>
+        <div class="order-right-size">
+          Size: <span>{{ items.size.name }}</span>
+        </div>
+        <div class="order-right-price">
+          Price: <span>${{ items.get_cost|make_int }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% empty %}
+    <section class="empty-section">
+      <h2>Your order list is empty now</h2>
+    </section>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

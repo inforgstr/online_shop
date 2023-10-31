@@ -1,12 +1,8 @@
-const dropDown = document.querySelector("li.nav_dropdown");
+let alertContent = document.querySelector(".top-alert");
+let alertBtn = document.querySelector(".top-alert svg");
 
-const dropContent = document.querySelector(".dropdown-main");
-const underDrop = document.querySelector(".main_content");
-
-dropDown.addEventListener("mouseover", () => {
-  dropContent.style.display = "block";
-});
-
-dropDown.addEventListener("mouseout", () => {
-  dropContent.style.display = "none";
-});
+if (alertBtn) {
+  alertBtn.addEventListener("click", (ev) => {
+    alertContent.style.display = "none";
+  });
+}

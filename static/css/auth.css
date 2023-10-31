@@ -1,0 +1,89 @@
+.block {
+  max-width: 1380px;
+  padding: 50px 15px 100px;
+  margin: 0 auto;
+}
+
+.section-header h1 {
+  font-size: 40px;
+}
+
+.block-body {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: var(--gray-color);
+  border-radius: 20px;
+}
+
+.block-body form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 50px 30px;
+}
+
+.block-body form input {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.block-body form > p input {
+  border-radius: 10px;
+  border: 0.2px solid var(--gray-darker);
+  padding: 20px;
+  font-size: 16px;
+}
+
+.block-body form p#psw {
+  position: relative;
+}
+
+.block-body form p#psw input {
+  padding-right: 50px;
+}
+
+.block-body form svg#svg1 {
+  display: none;
+}
+
+.block-body form svg {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.block-body form > input {
+  margin-bottom: 0;
+  padding: 10px 20px 10px 0;
+  font-size: 18px;
+  border-radius: 12px;
+  background-color: var(--header-color);
+  color: var(--white-color);
+  outline: none;
+  border: 1px solid var(--header-color);
+  transition: background-color 0.5s ease, color 0.4s ease-in;
+  cursor: pointer;
+}
+
+.block-body form > input:hover {
+  color: var(--header-color);
+  background-color: var(--white-color);
+}
+
+.block-body form > p:first-child {
+  margin-bottom: 40px;
+}
+
+p#ms-m {
+  margin: 10px 30px 40px;
+}
+
+p#hint {
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+ul.errorlist li {
+  color: red !important;
+  margin-bottom: 20px;
+}

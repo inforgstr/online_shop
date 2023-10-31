@@ -1,0 +1,208 @@
+{% extends 'shop/base.html' %} 
+
+{% load static %} 
+{% load shop_tags %} 
+
+{% block title %}{{ product.title }}{% endblock %} 
+
+{% block content %}
+<div class="block">
+  <section class="path">
+    <a href="{% url 'shop:home' %}">Home</a>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M6.53073 2.46937L11.5307 7.46937C11.6007 7.53905 11.6561 7.62184 11.694 7.71301C11.7318 7.80417 11.7513 7.90191 11.7513 8.00062C11.7513 8.09933 11.7318 8.19707 11.694 8.28824C11.6561 8.3794 11.6007 8.46219 11.5307 8.53187L6.53073 13.5319C6.38984 13.6728 6.19874 13.7519 5.99948 13.7519C5.80023 13.7519 5.60913 13.6728 5.46823 13.5319C5.32734 13.391 5.24818 13.1999 5.24818 13.0006C5.24818 12.8014 5.32734 12.6103 5.46823 12.4694L9.93761 8L5.46761 3.53062C5.32671 3.38973 5.24756 3.19863 5.24756 2.99937C5.24756 2.80011 5.32671 2.60902 5.46761 2.46812C5.60851 2.32723 5.7996 2.24807 5.99886 2.24807C6.19812 2.24807 6.38921 2.32723 6.53011 2.46812L6.53073 2.46937Z"
+        fill="black"
+        fill-opacity="0.6"
+      />
+    </svg>
+    <a href="{% url 'shop:product_filter' %}">Shop</a>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M6.53073 2.46937L11.5307 7.46937C11.6007 7.53905 11.6561 7.62184 11.694 7.71301C11.7318 7.80417 11.7513 7.90191 11.7513 8.00062C11.7513 8.09933 11.7318 8.19707 11.694 8.28824C11.6561 8.3794 11.6007 8.46219 11.5307 8.53187L6.53073 13.5319C6.38984 13.6728 6.19874 13.7519 5.99948 13.7519C5.80023 13.7519 5.60913 13.6728 5.46823 13.5319C5.32734 13.391 5.24818 13.1999 5.24818 13.0006C5.24818 12.8014 5.32734 12.6103 5.46823 12.4694L9.93761 8L5.46761 3.53062C5.32671 3.38973 5.24756 3.19863 5.24756 2.99937C5.24756 2.80011 5.32671 2.60902 5.46761 2.46812C5.60851 2.32723 5.7996 2.24807 5.99886 2.24807C6.19812 2.24807 6.38921 2.32723 6.53011 2.46812L6.53073 2.46937Z"
+        fill="black"
+        fill-opacity="0.6"
+      />
+    </svg>
+    <a href="{% url 'shop:product_filter' %}?gender={{ product.gender }}">{{ product.get_gender_display }}</a>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M6.53073 2.46937L11.5307 7.46937C11.6007 7.53905 11.6561 7.62184 11.694 7.71301C11.7318 7.80417 11.7513 7.90191 11.7513 8.00062C11.7513 8.09933 11.7318 8.19707 11.694 8.28824C11.6561 8.3794 11.6007 8.46219 11.5307 8.53187L6.53073 13.5319C6.38984 13.6728 6.19874 13.7519 5.99948 13.7519C5.80023 13.7519 5.60913 13.6728 5.46823 13.5319C5.32734 13.391 5.24818 13.1999 5.24818 13.0006C5.24818 12.8014 5.32734 12.6103 5.46823 12.4694L9.93761 8L5.46761 3.53062C5.32671 3.38973 5.24756 3.19863 5.24756 2.99937C5.24756 2.80011 5.32671 2.60902 5.46761 2.46812C5.60851 2.32723 5.7996 2.24807 5.99886 2.24807C6.19812 2.24807 6.38921 2.32723 6.53011 2.46812L6.53073 2.46937Z"
+        fill="black"
+        fill-opacity="0.6"
+      />
+    </svg>
+    <a href="{% url 'shop:product_filter' %}?type={{ product.type }}">{{ product.type }}</a>
+  </section>
+
+  <section class="product-view">
+    <div class="product-img">
+      <div class="img-sections">
+        <div class="img-item">
+          <img src="{{ product.img1.url }}" />
+        </div>
+        {% if product.img2 %}
+        <div class="img-item">
+          <img src="{{ product.img2.url }}" />
+        </div>
+        {% elif product.img3 %}
+        <div class="img-item">
+          <img src="{{ product.img3.url }}" />
+        </div>
+        {% endif %}
+      </div>
+      <div class="img-main">
+        <img src="{{ product.img1.url }}" alt="{{ product.title }}" />
+      </div>
+    </div>
+    <div class="product-desc">
+      <div class="product-title">
+        <h1>{{ product.title }}</h1>
+      </div>
+      <div class="product-stars">
+        {% if product.stars %}
+        <div class="overview-stars__inner">
+          <div class="Stars" style="--rating: {{ product.stars }};"></div>
+        </div>
+        <span id="rating">
+          {{ product.stars|make_int }}/<span id="disabled">5</span>
+        </span>
+        {% endif %}
+      </div>
+      <div class="overview-price detail">
+        {% if product.is_available %}
+          {% if product.get_discounted_price != product.price %}
+          <span id="current" class="detail">${{ product.get_discounted_price|make_int }}</span>
+          <span id="old-price" class="detail">${{ product.price|make_int }}</span>
+          <span id="price-discount" class="detail">-{{ product.discount }}%</span>
+          {% else %}
+          <span id="current">${{ product.price|make_int }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="product-desc-inner">
+        {{ product.description|safe|linebreaksbr }}
+      </div>
+      {% if not product.is_available %}
+      <div class="sign-up">
+        <p>Product Not available</p>
+      </div>
+      {% else %}
+      <form method="post" action="{% url 'cart:add_cart' product.slug %}">
+        {% csrf_token %}
+        <div class="product-sizes">
+          <p>Choose Size</p>
+          <div class="values">
+            {% for size in form.sizes %}
+            <label class="size-radio">
+              {{ size }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="cart-submission">
+          <div class="quantity">
+            <div id="minus">-</div>
+            {{ form.quantity }}
+            <div id="plus">+</div>
+          </div>
+          <input type="submit" value="Add to Cart">
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="detail-review">
+    <div class="detail-headers">
+      <div class="header-item">
+        <a href="{{ product.get_absolute_url }}"{% if not reviews %} class="detail-selected" {% endif %}>Product Details</a>
+      </div>
+      <div class="header-item">
+        <a href="{{ product.get_absolute_url }}?type=reviews"{% if reviews %} class="detail-selected" {% endif %}>Rating & Reviews</a>
+      </div>
+    </div>
+    <div class="detail-body">
+      {% if reviews %}
+      <div class="body-header">
+        <p>All Reviews <span id="disabled">({{ reviews.count }})</span></p>
+        <a href="{% url 'shop:product_detail_review' product.slug %}">Write a Review</a>
+      </div>
+      <div class="reviews-body">
+        {% if reviews != "empty" %}
+        {% for review in reviews %}
+        <div class="review-item" {% if review.user == user %} style="background-color: var(--gray-color);" {% endif %}>
+          <div class="review-stars">
+          <div class="Stars" style="--rating: {{ review.stars }}; font-size: 24px;"></div>
+          </div>
+          <div class="review-reviewer">
+            {{ review.user.first_name|default:review.user.username|title }}
+          </div>
+          <div class="review-body">
+            "{{ review.body|safe }}"
+          </div>
+          <div class="review-date">
+            Posted <span style="font-weight: 600;">{{ review.posted_date|timesince }}</span> ago
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="review-item">
+          Empty Reviews
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="detail-body__inner">
+        <p>Title: <strong>{{ product.title }}</strong></p>
+        <p>Type: <strong>{{ product.type }}</strong></p>
+        <p>Brand: <strong>{{ product.brand }}</strong></p>
+        <p>Gender: <strong>{{ product.get_gender_display }}</strong></p>
+        {% if product.is_available %}
+        <p>Price: <strong>{{ product.get_discounted_price|make_int }}$</strong></p>
+        {% else %}
+        <p>Price: <strong>not available</strong></p>
+        {% endif %}
+        {% if product.discount %}
+        <p>Discount: <strong>{{ product.discount }}%</strong></p>
+        {% endif %}
+        {% if product.stars %}
+        <p>Stars: <strong>{{ product.stars|make_int }}</strong>/5</p>
+        {% endif %}
+        <br>
+        <p>Description: <strong>{{ product.description|safe }}</strong></p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="similars">
+    <div class="section-header">
+      <h1>You might also like</h1>
+    </div>
+    <div class="card">
+      {% include 'shop/products/list.html' with products=similars %}
+    </div>
+  </section>
+</div>
+{% endblock %} {% block script %}
+<script src="{% static 'js/product_detail.js' %}"></script>
+{% endblock %}

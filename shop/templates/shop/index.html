@@ -5,6 +5,13 @@
 Shop Co
 {% endblock %}
 
+{% block link %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+/>
+{% endblock %}
+
 {% block content %}
 <main class="main_content">
   <div class="main_content__inner">
@@ -78,7 +85,7 @@ Shop Co
       {% include 'shop/products/list.html' with products=arrivals %}
     </div>
 
-    <a href="#" id="view-all">
+    <a href="{% url 'shop:product_filter' %}?filter_by=NA" id="view-all">
       View All
     </a>
   </div>
@@ -92,7 +99,7 @@ Shop Co
         {% include 'shop/products/list.html' with products=popular_products %}
       </div>
 
-      <a href="#" id="view-all">
+      <a href="{% url 'shop:product_filter' %}?filter_by=MO" id="view-all">
         View All
       </a>
     </div>
@@ -105,7 +112,7 @@ Shop Co
   </div>
   <div class="section-body">
     {% for style in styles %}
-    <a href="#" class="card-item casual" style="background-image: url({{style.img.url}});">
+    <a href="{% url 'shop:product_filter' %}?style={{ style.name }}" class="card-item casual" style="background-image: url({{style.img.url}});">
       <h3>{{ style.name|title }}</h3>
     </a>
     {% endfor %}
@@ -116,35 +123,35 @@ Shop Co
   <div class="reviews-header">
     <h1>OUR HAPPY CUSTOMERS</h1>
   </div>
-  <div class="reviews-body">
-    {% for review in reviews %}
-    <div class="card-item">
-      {% for star in review.product.get_stars %}
-        {% if star == "/" %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="9" height="17" viewBox="0 0 9 17" fill="none">
-        <path d="M3.56595 16.9793L8.99999 13.956V0.255005L6.38079 5.89491L0.207535 6.6431L4.76203 10.8769L3.56595 16.9793Z" fill="#FFC633"/>
-        </svg>
-        {% else %}
-        <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="19"
-        height="17"
-        viewBox="0 0 19 17"
-        fill="none"
-        >
-        <path
-            d="M9.24494 0.255005L11.8641 5.89491L18.0374 6.6431L13.4829 10.8769L14.679 16.9793L9.24494 13.956L3.8109 16.9793L5.00697 10.8769L0.452479 6.6431L6.62573 5.89491L9.24494 0.255005Z"
-            fill="#FFC633"
-        />
-        </svg>
-        {% endif %}
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% for review in reviews %}
+      <div class="swiper-slide">
+        <div class="review-stars">
+          <div class="Stars" style="--rating: {{ review.stars }}; font-size: 24px;"></div>
+        </div>
+        <p>
+          {% if review.user.first_name and review.user.last_name %}
+          <h3>{{ review.user.first_name }} {{ review.user.last_name|make_list|slice:":1"|join:"" }}.</h3>
+          {% else %}
+          <h3>{{ review.user.username }}</h3>
+          {% endif %}
+        </p>
+        <p>
+          "{{ review.body|truncatechars:200 }}"
+        </p>
+      </div>
       {% endfor %}
-      <p>
-        <h3>{{ review.user.first_name }} {{ review.user.last_name|make_list|slice:":1"|join:"" }}.</h3>
-      </p>
-      {{ review.body }}
     </div>
-    {% endfor %}
+
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
   </div>
 </section>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script src="{% static 'js/review-swiper.js' %}"></script>
 {% endblock %}

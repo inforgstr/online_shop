@@ -1,0 +1,140 @@
+footer {
+  background-color: var(--gray-color);
+  position: relative;
+}
+
+.footer__inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 80px 15px 70px;
+}
+
+.footer-contacts {
+  margin: 0 auto;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  background-color: var(--header-color);
+  color: var(--white-color);
+  border-radius: 20px;
+  padding: 36px 64px;
+  max-width: 1380px;
+  margin-bottom: 40px;
+}
+
+.contacts-title {
+  font-size: 24px;
+  max-width: 650px;
+}
+
+.contacts-form {
+  width: 350px;
+}
+
+.contacts-form .input {
+  position: relative;
+}
+
+.contacts-form .input svg {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+}
+
+.contacts-form .input input {
+  font-size: 16px;
+  width: 100%;
+  border-radius: 62px;
+  padding: 14px 18px 14px 50px;
+  outline: none;
+  border: 0;
+  margin-bottom: 14px;
+}
+
+.contacts-form .input input::placeholder {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+}
+
+.contacts-form button {
+  width: 100%;
+  border-radius: 62px;
+  padding: 12px 20px;
+  border: 0;
+  outline: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.contacts-form button:hover {
+  background-color: var(--gray-dark);
+}
+
+.footer-title-links {
+  margin-top: 35px;
+  display: flex;
+  gap: 20px;
+}
+
+.footer-title-links a {
+  padding: 12px;
+  background-color: var(--white-color);
+  clip-path: circle();
+  transition: all 0.5s ease-in;
+}
+
+.footer-title-links a:hover {
+  background-color: var(--header-color);
+}
+
+.footer-title-links a:hover svg {
+  fill: var(--white-color);
+}
+
+.footer-inner-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-bottom: 50px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer-inner-top .footer-title p {
+  max-width: 250px;
+  font-size: 14px;
+  margin-top: 25px;
+}
+
+.footer-links ul {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 140px;
+}
+
+.footer-links .title {
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.footer-links li {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.footer-links li a {
+  color: var(--gray-darker);
+  font-weight: 400;
+}
+
+.footer-inner-end .rights {
+  margin-top: 25px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}

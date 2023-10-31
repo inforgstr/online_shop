@@ -1,0 +1,53 @@
+form textarea {
+  padding: 20px;
+  border-radius: 12px;
+  border: 0;
+  resize: vertical;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form input[type="submit"] {
+  text-align: center;
+  padding: 20px 50px;
+  background-color: var(--header-color);
+  color: var(--white-color);
+  border: 1px solid var(--header-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 40px;
+}
+
+form .stars > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+
+.block-review .product-title {
+  font-size: 20px !important;
+}
+
+form .stars label {
+  display: block;
+  transition: all 0.3s ease-out;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--white-color);
+  cursor: pointer;
+}
+
+form .stars label:hover {
+  color: var(--white-color);
+  background-color: var(--header-color);
+}
+
+.block-review {
+  display: flex;
+  gap: 20px;
+}

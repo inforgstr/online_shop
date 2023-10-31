@@ -1,0 +1,33 @@
+.block {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 40px 15px 100px;
+}
+
+.block-header {
+  text-align: center;
+}
+
+.block-body {
+  padding: 70px 15px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+}
+
+.block-body a.brand-item {
+  padding: 20px 40px;
+  border-radius: 7px;
+  border: 1px solid indigo;
+  font-weight: 600;
+  transition: all 0.4s ease-in;
+  color: indigo;
+  text-transform: uppercase;
+}
+
+.block-body a.brand-item:hover {
+  color: var(--white-color);
+  background-color: var(--header-color);
+  border-radius: 20px;
+}

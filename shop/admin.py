@@ -16,18 +16,17 @@ class ProductTypeAdmin(admin.ModelAdmin):
 @admin.register(shop_models.ProductStyle)
 class ProductStyleAdmin(admin.ModelAdmin):
     list_display = ["name"]
+    fields = ["name", "img"]
 
 
-@admin.register(shop_models.UserProfile)
+@admin.register(shop_models.Profile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ["email", "is_active", "is_staff", "is_superuser", "date_joined"]
-    list_filter = ["email", "is_staff"]
-    search_fields = ["email"]
+    list_display = ["user", "phone_number"]
 
 
-@admin.register(shop_models.UserWishlist)
-class UserWishlistAdmin(admin.ModelAdmin):
-    list_display = ["user", "product", "quantity"]
+@admin.register(shop_models.CartItem)
+class UserCartAdmin(admin.ModelAdmin):
+    list_display = ["user", "product", "size", "quantity"]
 
 
 @admin.register(shop_models.Product)
@@ -44,7 +43,7 @@ class ProductAdmin(admin.ModelAdmin):
         "published",
         "is_available",
     ]
-    list_filter = ["title", "timestamp", "stars"]
+    list_filter = ["type", "style", "timestamp", "stars"]
     fields = [
         "type",
         "title",
@@ -57,11 +56,12 @@ class ProductAdmin(admin.ModelAdmin):
         "discount",
         "is_available",
         "published",
-        "size",
+        "sizes",
         "img1",
         "img2",
         "img3",
     ]
+    search_fields = ["title"]
 
 
 @admin.register(shop_models.Size)
@@ -94,17 +94,28 @@ class ShopBrandAdmin(admin.ModelAdmin):
     ]
 
 
+class OrderItemInline(admin.TabularInline):
+    model = shop_models.OrderItem
+    raw_id_fields = ["product"]
+
+
 @admin.register(shop_models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = [
-        "user",
-        "product",
-        "quantity",
-        "order_date",
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "address",
+        "postal_code",
+        "city",
+        "paid",
+        "created",
+        "updated",
     ]
     list_filter = [
-        "user",
-        "product",
-        "quantity",
-        "order_date",
+        "paid",
+        "created",
+        "updated",
     ]
+    inlines = [OrderItemInline]

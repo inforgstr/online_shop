@@ -1,5 +1,7 @@
+{% load shop_tags %}
+
 {% for product in products %}
-  <div class="card-item">
+  <a href="{{ product.get_absolute_url }}?type=reviews" class="card-item">
     <div class="item-img">
         <img src="{{ product.img1.url }}" alt="{{ product.title }}" />
     </div>
@@ -7,42 +9,30 @@
       <div class="overview-header">{{ product.title }}</div>
       <p id="rating">{{ product.product_reviews.count }} review{{ product.product_reviews.count|pluralize }}</p>
       <div class="overview-stars">
+        {% if product.stars %}
         <div class="overview-stars__inner">
-          {% if product.stars %}
-            {% for star in product.get_stars %}
-              {% if star == "/" %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="17" viewBox="0 0 9 17" fill="none">
-              <path d="M3.56595 16.9793L8.99999 13.956V0.255005L6.38079 5.89491L0.207535 6.6431L4.76203 10.8769L3.56595 16.9793Z" fill="#FFC633"/>
-              </svg>
-              {% else %}
-              <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="17"
-              viewBox="0 0 19 17"
-              fill="none"
-              >
-              <path
-                  d="M9.24494 0.255005L11.8641 5.89491L18.0374 6.6431L13.4829 10.8769L14.679 16.9793L9.24494 13.956L3.8109 16.9793L5.00697 10.8769L0.452479 6.6431L6.62573 5.89491L9.24494 0.255005Z"
-                  fill="#FFC633"
-              />
-              </svg>
-              {% endif %}
-            {% endfor %}
+          <div class="Stars" style="--rating: {{ product.stars }};font-size: 24px;"></div>
         </div>
-        <span id="rating">{{ product.stars }}</span>
+        <span id="rating">{{ product.stars|make_int }}/<span id="disabled">5</span></span>
         {% endif %}
       </div>
       <div class="overview-price">
-          {% if product.get_discounted_price %}
-          <span id="current">${{ product.get_discounted_price }}</span>
-          <span id="old-price">${{ product.price }}</span>
+        {% if not product.is_available %}
+          <span id="non-available">Soon...</span>
+        {% else %}
+          {% if product.get_discounted_price != product.price %}
+          <span id="current">${{ product.get_discounted_price|make_int }}</span>
+          <span id="old-price">${{ product.price|make_int }}</span>
           <span id="price-discount">-{{ product.discount }}%</span>
           {% else %}
-          <span id="current">${{ product.price }}</span>
+          <span id="current">${{ product.price|make_int }}</span>
           {% endif %}
+        {% endif %}
       </div>
     </div>
-    </div>
-  </div>
+  </a>
+{% empty %}
+  <h1 id="empty">
+    Coming soon...
+  </h1>
 {% endfor %}

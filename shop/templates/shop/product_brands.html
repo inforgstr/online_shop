@@ -1,0 +1,23 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Popular Brands{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static './css/brands.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="block">
+    <div class="block-header">
+        <h1>ALL BRANDS</h1>
+    </div>
+    <div class="block-body">
+        {% for brand in brands %}
+        <a href="{% url 'shop:product_filter' %}?brand={{ brand.name }}" class="brand-item">
+            {{ brand.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

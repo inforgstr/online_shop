@@ -165,3 +165,10 @@ form#remove-all input:hover {
   color: var(--header-color);
   background-color: var(--white-color);
 }
+
+.product-title form button {
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}

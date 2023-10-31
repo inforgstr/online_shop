@@ -46,10 +46,10 @@
             <div class="product-body">
               <div class="product-title">
                 <p>{{ c.product.title }}</p>
-                <a
-                  href="{% url 'cart:remove_cart' c.product.slug c.size %}"
-                >
-                  <svg
+                <form action="{% url 'cart:remove_cart' c.product.slug c.size %}" method="POST">
+                  {% csrf_token %}
+                  <button>
+                    <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -61,7 +61,8 @@
                       fill="#FF3333"
                     />
                   </svg>
-                </a>
+                  </button>
+                </form>
               </div>
               <div class="product-size">
                 Size: <span id="disabled">{{ c.size }}</span>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 from shop.models import Product
 from shop.forms import ProductCartForm
@@ -13,10 +14,10 @@ def cart_detail(request):
     return render(request, "cart/cart_detail.html", {"cart": cart})
 
 
+@require_POST
 def remove_all_cart(request):
-    if request.method == "POST":
-        cart = Cart(request)
-        cart.clear()
+    cart = Cart(request)
+    cart.clear()
     return redirect(reverse("cart:cart_detail"))
 
 
@@ -62,6 +63,7 @@ def change_cart_add_manage(request, product_slug, size_name):
     return redirect(reverse("cart:cart_detail"))
 
 
+@require_POST
 def remove_cart(request, product_slug, size_name):
     """
     View for removing item from user cart.

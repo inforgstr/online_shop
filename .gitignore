@@ -22,6 +22,7 @@ media
 
 # VS Code
 .vscode/
+prod.py
 
 # Distribution / packaging
 .Python

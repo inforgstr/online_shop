@@ -226,5 +226,5 @@ def order_create(request):
             return redirect(reverse("payments:process"))
 
     else:
-        form = OrderCreateForm()
+        form = OrderCreateForm(instance=request.user)
     return render(request, "order/create.html", {"form": form})
